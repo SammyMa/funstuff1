@@ -15,34 +15,30 @@ def isprime(n):
     return True
 
 def getPossibleActions(currentPrime):
-	tempArr = []
 	listOfPrimes = []
 	temp = currentPrime
-	numOfDigit = 0
 
-	while (temp / 10 != 0):
-		""" get the number of digits """
-		tempArr[numOfDigit] = temp % 10
-		temp = temp / 10
-		numOfDigit+=1
-	tempArr.reverse()
-	
+	numOfDigit = len(str(currentPrime))	
 	temp = currentPrime
+	
 	for index in range(0, numOfDigit):
-		tempindex = index + 1
-		temp = temp / (10 ** tempindex) * (10 ** tempindex) + temp % (10 ** index)
-		for loop in range(0, 10):
-			temp = temp + 10**index
-			if isprime(temp):
-				if temp not in listOfPrimes:
-					listOfPrimes.append(temp)
-	""" change the first digit """
-	digits = numOfDigit - 1
-	temp = (temp % 10 ** digits) + temp / (10 ** digits) * (10 ** digits)
-	for index in range (1,10):
-		temp = temp + 10 ** index
-		if isprime(temp) and (temp not in listOfPrimes):
-			listOfPrimes.append(temp)		
+		if index == numOfDigit - 1: 
+			digits = numOfDigit - 1 
+			temp = temp % (10 ** digits) + (temp/
+					(10**digits)*(10**digits))
+			for index in range (1,10):
+				temp = temp + 10 ** index
+				if isprime(temp) and (temp not in listOfPrimes):
+					listOfPrimes.append(temp)    
+		else: 
+			tempindex = index + 1
+			temp = (temp / (10 ** tempindex)) * (10 ** tempindex) + (temp % (10 ** index)) 
+			for loop in range(0, 10):
+				temp = temp + 10**index
+				if isprime(temp):
+					if temp not in listOfPrimes:
+						listOfPrimes.append(temp)
+		temp = currentPrime
 	return listOfPrimes
 
 def getPath(startingPrime, finalPrime):
