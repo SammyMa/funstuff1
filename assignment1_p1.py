@@ -1,5 +1,4 @@
-__author__ = 'jim027@ucsd.edu, A99075314, siz001@ucsd.edu, A99076798, 
-	   yuc036@ucsd.edu, A91112915'
+__author__ = 'jim027@ucsd.edu, A99075314, siz001@ucsd.edu, A99076798, yuc036@ucsd.edu, A91112915'
 
 import sys
 
@@ -20,30 +19,30 @@ def getPossibleActions(currentPrime):
 	listOfPrimes = []
 	temp = currentPrime
 	numOfDigit = 0
-	
-	""" get the number of digits """
+
 	while (temp / 10 != 0):
+		""" get the number of digits """
 		tempArr[numOfDigit] = temp % 10
 		temp = temp / 10
-		numOfDigit ++
+		numOfDigit+=1
 	tempArr.reverse()
 	
 	temp = currentPrime
 	for index in range(0, numOfDigit):
 		tempindex = index + 1
-		temp = temp / (10 ** tempindex) * (10 ** tempindex)
+		temp = temp / (10 ** tempindex) * (10 ** tempindex) + temp % (10 ** index)
 		for loop in range(0, 10):
 			temp = temp + 10**index
-			if(isPrime(temp))
-
-					
-
-
-
-	""" chage the first digit """
-	for index in range(0,9):
-		temp = temp + 1
-
+			if isprime(temp):
+				if temp not in listOfPrimes:
+					listOfPrimes.append(temp)
+	""" change the first digit """
+	digits = numOfDigit - 1
+	temp = (temp % 10 ** digits) + temp / (10 ** digits) * (10 ** digits)
+	for index in range (1,10):
+		temp = temp + 10 ** index
+		if isprime(temp) and (temp not in listOfPrimes):
+			listOfPrimes.append(temp)		
 	return listOfPrimes
 
 def getPath(startingPrime, finalPrime):
