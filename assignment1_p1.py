@@ -26,27 +26,46 @@ def getPossibleActions(currentPrime):
 			temp = temp % (10 ** index)
 			for loop in range (1,10):
 				temp = temp + (10 ** index)
-				if isprime(temp) and (temp not in listOfPrimes):
-					print(temp)
+				if isprime(temp) and temp != currentPrime and (temp not in listOfPrimes):
+					print("prime is %d" %temp)
 					listOfPrimes.append(temp)    
 		else: 
 			tempindex = index + 1
-			temp = (temp / (10 ** tempindex)) * (10 ** tempindex) + (temp % (10 ** index)) 
+			temp = (temp / (10 ** tempindex)) * (10 ** tempindex) + (temp % (10 ** index))
+			print ("HERE IS: %d" %temp)
+			origin = temp
 			for loop in range(0, 10):
-				temp = temp + 10**index
-				if isprime(temp) and (temp not in listOfPrimes):
-						print(temp)
-						listOfPrimes.append(temp)
+				print(loop)
+				temp = origin + loop * (10 ** index)
+				print("here is: %d" %temp)
+				if isprime(temp) and temp != currentPrime and (temp not in listOfPrimes):
+					print("prime is %d" %temp)
+					listOfPrimes.append(temp)
 		temp = currentPrime
 	return listOfPrimes
 
 def getPath(startingPrime, finalPrime):
-	return path
+	startingPrime = int(startingPrime)
+	finalPrime = int(finalPrime)
+	queue = [(startingPrime,[startingPrime],[])]
+	key = startingPrime
+	visited = []
+	while queue:
+		(key,path,children) = queue.pop(0)
+		visited.append(key)
+		children = children + getPossibleActions(key)
+		for next in children:
+			if next == finalPrime:
+				return ' '.join(map(str,path + [next]))
+			else:
+				if next not in visited:
+					queue.append((next,path + [next],getPossibleActions(next)))
+
+	return "UNSOLVABLE"
 
 def main():
-	prime = 103 
-	getPossibleActions(prime)
-	
+	primes = str(sys.stdin.readline()).split()
+	print(getPath(primes[0],primes[1]))
 
 if __name__ == '__main__':
 	main()
