@@ -59,6 +59,8 @@ def getPath(startingPrime, finalPrime):
 	visitedF = set()
 	addedS = set([startingPrime])
 	addedF = set([finalPrime])
+	length = 100000
+	result_str = "UNSOLVABLE"
 	while queue1 and queue2:
 		keyS = queue1.keys().pop(0)
 		pathS = queue1[keyS]
@@ -66,27 +68,33 @@ def getPath(startingPrime, finalPrime):
 		childrenS = getPossibleActions(keyS)
 		del queue1[keyS]
 		if keyS in queue2:
-			str2 = ' '.join(map(str,[finalPrime] + pathS[::-1]))
-			str1 = ' '.join(map(str,[startingPrime] + pathS))
-			return str1 + '\n' + str2
-		for elemS in childrenS:
-			if elemS not in visitedS and elemS not in addedS:
-				queue1[elemS] = pathS+[elemS]
-				addedS.add(elemS)
+			if ((len(pathS) + len(queue2[keyS])) < length):
+				length = len(pathS) + len(queue2[keyS])
+				str2 = ' '.join(map(str,[finalPrime] + queue2[keyS]))
+				str1 = ' '.join(map(str,[startingPrime] + pathS))
+				result_str = str1 + '\n' + str2
+		else:
+			for elemS in childrenS:
+				if elemS not in visitedS and elemS not in addedS:
+					queue1[elemS] = pathS+[elemS]
+					addedS.add(elemS)
 		keyF = queue2.keys().pop(0)
 		pathF = queue2[keyF]
 		visitedF.add(keyF)
 		childrenF = getPossibleActions(keyF)
 		del queue2[keyF]
 		if keyF in queue1:
-			str2 = ' '.join(map(str,[finalPrime] + pathF))
-			str1 = ' '.join(map(str,[startingPrime] + pathF[::-1]))
-			return str1 + '\n' + str2
-		for elemF in childrenF:
-			if elemF not in visitedF and elemF not in addedF:
-				queue2[elemF] = pathF+[elemF]
-				addedF.add(elemF)
-	return "UNSOLVABLE"
+			if((len(pathF) + len(queue1[keyF])) < length):
+				length = len(pathF) + len(queue1[keyF])
+				str2 = ' '.join(map(str,[finalPrime] + pathF))
+				str1 = ' '.join(map(str,[startingPrime] + queue1[keyF]))
+				result_str = str1 + '\n' + str2
+		else:
+			for elemF in childrenF:
+				if elemF not in visitedF and elemF not in addedF:
+					queue2[elemF] = pathF+[elemF]
+					addedF.add(elemF)
+	return result_str
 
 def main():
 	primes = str(sys.stdin.readline()).split()
