@@ -1,6 +1,7 @@
 __author__ = 'jim027@ucsd.edu, A99075314, siz001@ucsd.edu, A99076798, yuc036@ucsd.edu, A91112915'
 
 import sys
+import time
 
 """ function to check if a number is a prime or not """
 def isprime(n):
@@ -14,14 +15,14 @@ def isprime(n):
            return False
     return True
 
-def inlist(toBeCheck, position):
+def inlist(toBeCheck,position):
 	try:
-		result = toBeCheck.index(position)
+		result = toBeCheck.index(position)         
 	except ValueError:
 		return False
 	else:
-	  	return True
-
+	 	return True
+	
 def getPossibleActions(currentPrime):
 	listOfPrimes = []
 	temp = currentPrime
@@ -34,20 +35,18 @@ def getPossibleActions(currentPrime):
 			temp = temp % (10 ** index)
 			for loop in range (1,10):
 				temp = temp + (10 ** index)
-				if inlist(listOfPrimes, temp) == False and isprime(temp):
+				if isprime(temp) and inlist(listOfPrimes, temp) == False:
 					listOfPrimes.append(temp)    
 		else: 
 			tempindex = index + 1
 			temp = (temp / (10 ** tempindex)) * (10 ** tempindex) + (temp % (10 ** index))
-			print ("HERE IS: %d" %temp)
 			origin = temp
 			for loop in range(0, 10):
-				print(loop)
 				temp = origin + loop * (10 ** index)
-				print("here is: %d" %temp)
-				if inlist(listOfPrimes, temp) == False and isprime(temp):
+				if isprime(temp) and inlist(listOfPrimes, temp) == False:
 					listOfPrimes.append(temp)
 		temp = currentPrime
+	#listOfPrimes.reverse()
 	return listOfPrimes
 
 def getPath(startingPrime, finalPrime):
@@ -59,46 +58,46 @@ def getPath(startingPrime, finalPrime):
 	visitedF = set()
 	addedS = set([startingPrime])
 	addedF = set([finalPrime])
-	length = 100000
-	result_str = "UNSOLVABLE"
 	while queue1 and queue2:
-		keyS = queue1.keys().pop(0)
-		pathS = queue1[keyS]
-		visitedS.add(keyS)
-		childrenS = getPossibleActions(keyS)
-		del queue1[keyS]
-		if keyS in queue2:
-			if ((len(pathS) + len(queue2[keyS])) < length):
-				length = len(pathS) + len(queue2[keyS])
+		ilist = list(set(queue1.keys()) & set(queue2.keys()))
+		if ilist:
+			keyS = ilist.pop(0)
+			str2 = ' '.join(map(str,[finalPrime] + queue2[keyS]))
+			str1 = ' '.join(map(str,[startingPrime] + queue1[keyS]))
+			return str1 + '\n' + str2
+		else:
+			for keyS in queue1.keys():
+				visitedS.add(keyS)
+				childrenS = getPossibleActions(keyS)
+				for elemS in childrenS:
+					if elemS not in visitedS and elemS not in addedS:
+						queue1[elemS] = queue1[keyS] + [elemS]
+						addedS.add(elemS)
+				del queue1[keyS]
+			slist = list(set(queue1.keys()) & set(queue2.keys()))
+			if slist:
+				keyS = slist.pop(0)
 				str2 = ' '.join(map(str,[finalPrime] + queue2[keyS]))
-				str1 = ' '.join(map(str,[startingPrime] + pathS))
-				result_str = str1 + '\n' + str2
-		else:
-			for elemS in childrenS:
-				if elemS not in visitedS and elemS not in addedS:
-					queue1[elemS] = pathS+[elemS]
-					addedS.add(elemS)
-		keyF = queue2.keys().pop(0)
-		pathF = queue2[keyF]
-		visitedF.add(keyF)
-		childrenF = getPossibleActions(keyF)
-		del queue2[keyF]
-		if keyF in queue1:
-			if((len(pathF) + len(queue1[keyF])) < length):
-				length = len(pathF) + len(queue1[keyF])
-				str2 = ' '.join(map(str,[finalPrime] + pathF))
-				str1 = ' '.join(map(str,[startingPrime] + queue1[keyF]))
-				result_str = str1 + '\n' + str2
-		else:
-			for elemF in childrenF:
-				if elemF not in visitedF and elemF not in addedF:
-					queue2[elemF] = pathF+[elemF]
-					addedF.add(elemF)
-	return result_str
+				str1 = ' '.join(map(str,[startingPrime] + queue1[keyS]))
+				return str1 + '\n' + str2
+			else: 
+				for keyF in queue2.keys():
+					visitedF.add(keyF)
+					childrenF = getPossibleActions(keyF)
+					for elemF in childrenF:
+						if elemF not in visitedF and elemF not in addedF:
+							queue2[elemF] = queue2[keyF] + [elemF]
+							addedF.add(elemF)
+					del queue2[keyF]		
+	return "UNSOLVABLE"
 
 def main():
 	primes = str(sys.stdin.readline()).split()
+	start = time.time()
 	print(getPath(primes[0],primes[1]))
+	end = time.time()
+	timer = end - start
+	print("time elapsed is %d" % timer)
 
 if __name__ == '__main__':
 	main()
