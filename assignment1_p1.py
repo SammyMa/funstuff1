@@ -14,13 +14,6 @@ def isprime(n):
            return False
     return True
 
-def inlist(toBeCheck,position):
-	try:
-		result = toBeCheck.index(position)         
-	except ValueError:
-		return False
-	else:
-	 	return True
 	
 def getPossibleActions(currentPrime):
 	listOfPrimes = []
