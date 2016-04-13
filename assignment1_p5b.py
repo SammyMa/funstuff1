@@ -46,43 +46,46 @@ def getPossibleActions(currentPrime):
 
 	return listOfPrimes
 
-def distance(startingPrime, finalPrime):
-	distance = 0
-	
+def distance(heu, startingPrime, finalPrime):
+	distance = len(str(startingPrime))
+	if heu >= 0:
+		distance = heu - 1
+		return distance
 	for index in range(0, len(str(startingPrime))):
 		if str(startingPrime)[index] == str(finalPrime)[index]:
-			distance = distance
-		else:
-			distance = distance + 1
+			distance = distance - 1
 
 	return distance
 
 def getPath(startingPrime, finalPrime):
 	startingPrime = int(startingPrime)
 	finalPrime = int(finalPrime)
+
 	if len(str(startingPrime)) != len(str(finalPrime)):
 		return "UNSOLVABLE"
+
     	if isprime(startingPrime) == False or isprime(finalPrime) == False:
         	return "UNSOLVABLE"
     	if startingPrime == finalPrime:
         	return startingPrime
 
 	queue = Q.PriorityQueue()
-    	queue.put(((distance(startingPrime,finalPrime)),0,startingPrime,[startingPrime]))
-	visited = {startingPrime}
+    	queue.put(((distance(0,startingPrime,finalPrime)),distance(0,startingPrime,finalPrime),0,startingPrime,[startingPrime]))
+	
+	visited = set()
 	added = {startingPrime}
+
 	while queue:
-		(distf,distg,key,path) = queue.get()
-		children = getPossibleActions(key)
+		(distf,disth,distg,key,path) = queue.get()
 		visited.add(key)
+		children = getPossibleActions(key)
 		for elem in children:
 			if elem == finalPrime:
 				return ' '.join(map(str,path + [elem]))
 			else:
 				if elem not in visited and elem not in added:
-					queue.put((distg+1+distance(elem,finalPrime),distg+1,elem,path+[elem]))
+					queue.put((distg+1+distance(disth,elem,finalPrime),distance(disth,elem,finalPrime),distg+1,elem,path+[elem]))
 					added.add(elem)
-
 	return "UNSOLVABLE"
 
 def main():
