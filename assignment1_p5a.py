@@ -1,6 +1,11 @@
 __author__ = 'jim027@ucsd.edu, A99075314, siz001@ucsd.edu, A99076798, yuc036@ucsd.edu, A91112915'
 
 import sys
+import time
+try:
+	import Queue as Q
+except ImportError:
+	import queue as Q
 
 """ function to check if a number is a prime or not """
 def isprime(n):
@@ -41,6 +46,17 @@ def getPossibleActions(currentPrime):
 
 	return listOfPrimes
 
+def distance(startingPrime, finalPrime):
+	distance = 0
+
+	for index in range(0, len(str(startingPrime))):
+		if str(startingPrime)[index] == str(finalPrime)[index]:
+			distance = distance
+		else:
+			distance = distance + 1
+
+	return distance
+
 def getPath(startingPrime, finalPrime):
 	startingPrime = int(startingPrime)
 	finalPrime = int(finalPrime)
@@ -48,26 +64,28 @@ def getPath(startingPrime, finalPrime):
         	return "UNSOLVABLE"
     	if startingPrime == finalPrime:
         	return startingPrime
-    	queue = {startingPrime: [startingPrime]}
-	visited = set()
-	added = set()
+
+	queue = Q.PriorityQueue()
+    	queue.put(((distance(startingPrime,finalPrime)),startingPrime,[startingPrime]))
+	
 	while queue:
-		(key,path) = queue.pop(0)
-		visited.add(key)
+		(dist,key,path) = queue.get()
 		children = getPossibleActions(key)
 		for elem in children:
 			if elem == finalPrime:
 				return ' '.join(map(str,path + [elem]))
 			else:
-                		if elem not in visited and elem not in added:
-					queue.append((elem,path+[elem]))
-					added.add(elem)
+				queue.put((dist+1+distance(elem,finalPrime),elem,path+[elem]))
 
 	return "UNSOLVABLE"
 
 def main():
+	start = time.time()
 	primes = str(sys.stdin.readline()).split()
 	print(getPath(primes[0],primes[1]))
+	end = time.time()
+	cost = end - start
+	print("time elapsed is %d" % cost)
 
 if __name__ == '__main__':
 	main()
