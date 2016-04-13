@@ -58,6 +58,8 @@ def getPath(startingPrime, finalPrime):
 	visitedF = set()
 	addedS = set([startingPrime])
 	addedF = set([finalPrime])
+	if isprime(startingPrime) == False or isprime(finalPrime) == False:
+		return "UNSOLVABLE"
 	while queue1 and queue2:
 		ilist = list(set(queue1.keys()) & set(queue2.keys()))
 		if ilist:

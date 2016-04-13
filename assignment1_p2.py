@@ -63,7 +63,7 @@ def getPath(startingPrime, finalPrime):
 		children = getPossibleActions(key)
 		for elem in children:
 			if elem not in visited:
-				stack.append((elem,path+[elem]))
+				stack.append((elem, path+[elem]))
 
 	return "UNSOLVABLE"
 
