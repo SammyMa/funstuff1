@@ -94,12 +94,9 @@ def getPath(startingPrime, finalPrime):
 	return "UNSOLVABLE"
 
 def main():
-	primes = str(sys.stdin.readline()).split()
-	start = time.time()
-	print(getPath(primes[0],primes[1]))
-	end = time.time()
-	timer = end - start
-	print("time elapsed is %d" % timer)
+	for line in sys.stdin:
+		primes = str(line).split()
+		print(getPath(primes[0],primes[1]))
 
 if __name__ == '__main__':
 	main()

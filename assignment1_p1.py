@@ -66,8 +66,9 @@ def getPath(startingPrime, finalPrime):
 	return "UNSOLVABLE"
 
 def main():
-	primes = str(sys.stdin.readline()).split()
-	print(getPath(primes[0],primes[1]))
+	for line in sys.stdin:
+		primes=str(line).split()
+		print(getPath(primes[0],primes[1]))
 
 if __name__ == '__main__':
 	main()
