@@ -46,6 +46,12 @@ def getPossibleActions(currentPrime):
 
 	return listOfPrimes
 
+""" get the distance from the first prime to goal by calculating the number of different digits they have, and the heuristic
+	length of its children are minus 1
+	if parent's length becomes 0 but still not same as the goal, the child has distance as hamming distance with the goal
+	otherwise, it will automatically discriminate by 1 from parent's heuristic length
+	since hamming distance is consistent and admirable, the length less that hamming distance is also admirable and 
+	consistent """
 def distance(heu, startingPrime, finalPrime):
 	distance = len(str(startingPrime))
 	if heu >= 0:
